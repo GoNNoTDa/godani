@@ -1,0 +1,6 @@
+[
+  { "label": "Inicio", "path": "home" },
+  { "label": "Bio", "path": "pages/bio.md" },
+  { "label": "Portfolio", "path": "pages/portfolio.md" },
+  { "label": "Blog", "path": "blog/index.md" }
+]
