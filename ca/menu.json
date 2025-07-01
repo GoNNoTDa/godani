@@ -1,5 +1,5 @@
 [
-  { "label": "Inicio", "path": "ca/pages/home" },
+  { "label": "Inici", "path": "ca/pages/home" },
   { "label": "Bio", "path": "ca/pages/bio.md" },
   { "label": "Portfolio", "path": "caes/pages/portfolio.md" },
   { "label": "Blog", "path": "ca/blog/index.md" }
