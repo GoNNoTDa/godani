@@ -263,8 +263,6 @@
                     link.classList.add('px-4', 'py-2', 'bg-blue-700', 'hover:bg-blue-800', 'text-white', 'font-medium', 'rounded-md', 'shadow-sm');
                     navElement.appendChild(link);
                 });
-
-                hideLoading(); // Asegura que el indicador de carga se oculte si el menú falla
             } catch (error) {
                 // Si hay un error al cargar o parsear el menú, lo mostramos
                 console.error("No se pudo construir el menú:", error);

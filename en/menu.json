@@ -1,6 +1,6 @@
 [
-  { "label": "Inicio", "path": "home" },
-  { "label": "Bio", "path": "pages/bio.md" },
-  { "label": "Portfolio", "path": "pages/portfolio.md" },
-  { "label": "Blog", "path": "blog/index.md" }
+  { "label": "Inicio", "path": "en/pages/home" },
+  { "label": "Bio", "path": "en/pages/bio.md" },
+  { "label": "Portfolio", "path": "en/pages/portfolio.md" },
+  { "label": "Blog", "path": "en/blog/index.md" }
 ]
