@@ -1,4 +1,4 @@
-```markdown
+```
 # Primeros Pasos con Tailwind CSS: Una Guía Rápida
 
 **Fecha:** 01 de Abril, 2025

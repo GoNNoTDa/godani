@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Web de Contenido GitHub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuente Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind: bg-slate-50 */
+            color: #334155; /* Tailwind: text-slate-700 */
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        nav a {
+            transition: all 0.2s ease-in-out;
+        }
+        nav a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        /* Basic Markdown styling */
+        .markdown-content h1 { font-size: 2.25rem; margin-bottom: 1.5rem; font-weight: 700; color: #1e293b; } /* text-4xl font-bold text-slate-900 */
+        .markdown-content h2 { font-size: 1.875rem; margin-bottom: 1.25rem; font-weight: 600; color: #1e293b; } /* text-3xl font-semibold text-slate-900 */
+        .markdown-content h3 { font-size: 1.5rem; margin-bottom: 1rem; font-weight: 600; color: #1e293b; } /* text-2xl font-semibold text-slate-900 */
+        .markdown-content p { margin-bottom: 1rem; line-height: 1.75; }
+        .markdown-content ul, .markdown-content ol { list-style-position: inside; margin-bottom: 1rem; padding-left: 1.5rem; }
+        .markdown-content ul li { list-style-type: disc; }
+        .markdown-content ol li { list-style-type: decimal; }
+        .markdown-content a { color: #2563eb; text-decoration: underline; } /* text-blue-600 */
+        .markdown-content pre {
+            background-color: #e2e8f0; /* Tailwind: bg-slate-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        .markdown-content code {
+            font-family: monospace;
+            background-color: #e2e8f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+        }
+        /* Estilo para el indicador de carga */
+        #loading-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 200px; /* Altura para centrar el spinner */
+            font-size: 1.25rem;
+            color: #3b82f6; /* Tailwind: text-blue-500 */
+        }
+        .spinner {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3b82f6; /* Blue */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 shadow-md rounded-b-lg">
+        <div class="container flex justify-between items-center">
+            <h1 class="text-3xl font-bold rounded">Mi Proyecto GitHub</h1>
+            <div class="flex items-center space-x-4">
+                <nav id="main-nav" class="space-x-4 flex">
+                    <!-- Los enlaces del menú se cargarán aquí dinámicamente desde menu.json -->
+                </nav>
+                <select id="language-switcher" class="p-2 rounded-md bg-blue-700 text-white border border-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <option value="es">Español</option>
+                    <option value="en">English</option>
+                    <option value="ca">Català</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mt-8 p-6 bg-white shadow-lg rounded-lg">
+        <div id="loading-indicator" class="text-center text-blue-500 font-semibold hidden">
+            <div class="spinner"></div>
+            Cargando contenido...
+        </div>
+        <div id="content" class="markdown-content">
+            <!-- El contenido se cargará aquí -->
+            <h2 class="text-2xl font-bold mb-4 text-center">Bienvenido</h2>
+            <p class="text-lg text-center">Selecciona una opción del menú para ver el contenido.</p>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center p-4 mt-8 rounded-t-lg">
+        <div class="container">
+            <p>&copy; <span id="current-year"></span> Mi Web de Contenido GitHub. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Función muy básica para convertir Markdown a HTML
+        // Para algo más robusto, se recomendaría usar una biblioteca como 'marked.js' o 'showdown.js'
+        function markdownToHtml(markdown) {
+            // Convertir negritas
+            markdown = markdown.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Convertir cursivas
+            markdown = markdown.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            // Convertir títulos
+            markdown = markdown.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            markdown = markdown.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            markdown = markdown.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            // Convertir enlaces
+            markdown = markdown.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-blue-600 underline hover:text-blue-800">$1</a>');
+            // Convertir saltos de línea a <p> (simple)
+            markdown = markdown.replace(/^(?!<h|<ul|<ol|<pre>)(.*)$/gim, '<p>$1</p>');
+            // Convertir listas no ordenadas (simple)
+            markdown = markdown.replace(/^\* (.*)$/gim, '<li>$1</li>');
+            markdown = markdown.replace(/(<li>.*<\/li>)/gms, '<ul>$1</ul>');
+            // Convertir bloques de código (simple)
+            markdown = markdown.replace(/```(.*?)```/gms, '<pre><code>$1</code></pre>');
+            return markdown;
+        }
+
+        const config = {
+            repoOwner: 'GoNNoTDa', // ¡ATENCIÓN! Reemplaza con tu usuario de GitHub
+            repoName: 'godani', // ¡ATENCIÓN! Reemplaza con el nombre de tu repositorio
+            branch: 'main', // O 'master', según tu rama principal
+            supportedLanguages: ['es', 'en', 'ca'], // Idiomas soportados
+            defaultLanguage: 'es', // Idioma por defecto
+            currentLanguage: '', // Se establecerá dinámicamente
+            baseUrl: '' // Se construirá dinámicamente
+        };
+
+        const navElement = document.getElementById('main-nav');
+        const contentElement = document.getElementById('content');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const languageSwitcher = document.getElementById('language-switcher');
+
+        // Función para mostrar/ocultar el indicador de carga
+        function showLoading() {
+            loadingIndicator.classList.remove('hidden');
+            contentElement.classList.add('hidden');
+        }
+
+        function hideLoading() {
+            loadingIndicator.classList.add('hidden');
+            contentElement.classList.remove('hidden');
+        }
+
+        // Función para detectar el idioma preferido del usuario
+        function getPreferredLanguage() {
+            let lang = navigator.language.split('-')[0]; // Obtiene 'es' de 'es-ES'
+            if (!config.supportedLanguages.includes(lang)) {
+                lang = config.defaultLanguage;
+            }
+            return lang;
+        }
+
+        // Función para cargar un archivo desde GitHub
+        // Ahora lanza un error si la respuesta no es OK
+        async function fetchGitHubFile(filePath) {
+            // La URL base ya incluye el idioma, por lo que filePath es relativo a la carpeta del idioma
+            const rawGitHubUrl = `${config.baseUrl}${filePath}`;
+            try {
+                const response = await fetch(rawGitHubUrl);
+                if (!response.ok) {
+                    // Lanzamos un error que será capturado por la función que llama (renderContent o buildMenu)
+                    throw new Error(`Error al cargar el archivo: ${response.statusText || 'Desconocido'} para ${filePath} en idioma ${config.currentLanguage}`);
+                }
+                return await response.text();
+            } catch (error) {
+                console.error("No se pudo cargar el archivo de GitHub:", error);
+                throw error; // Volvemos a lanzar el error para que sea manejado por el llamador
+            }
+        }
+
+        // Función para renderizar el contenido según la ruta
+        async function renderContent(path) {
+            showLoading(); // Muestra el indicador al inicio del renderizado
+            let contentToDisplay = '';
+            try {
+                if (!path || path === 'home') {
+                    // Contenido de la página de inicio, que podría ser estático o cargarse también de un MD
+                    // Para simplicidad, aquí es estático, pero podrías tener 'home.md' en cada carpeta de idioma
+                    if (config.currentLanguage === 'es') {
+                        contentToDisplay = `
+                            <h2 class="text-3xl font-bold mb-4 text-center text-blue-700">Bienvenido a mi sitio web</h2>
+                            <p class="text-lg text-gray-700 text-center">Este sitio carga su contenido directamente desde un repositorio de GitHub.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">Explora las diferentes secciones usando el menú de navegación.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">Este es un ejemplo de cómo puedes construir tu propia web con un stack simple LAMP + GitHub.</p>
+                            <div class="mt-8 text-center">
+                                <img src="https://placehold.co/400x250/b0d6fd/1e293b?text=Contenido+Din%C3%A1mico" alt="Imagen de Contenido Dinámico" class="mx-auto rounded-lg shadow-md" />
+                            </div>
+                        `;
+                    } else if (config.currentLanguage === 'en') {
+                        contentToDisplay = `
+                            <h2 class="text-3xl font-bold mb-4 text-center text-blue-700">Welcome to my Website</h2>
+                            <p class="text-lg text-gray-700 text-center">This site loads its content directly from a GitHub repository.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">Explore the different sections using the navigation menu.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">This is an example of how you can build your own website with a simple LAMP + GitHub stack.</p>
+                            <div class="mt-8 text-center">
+                                <img src="https://placehold.co/400x250/b0d6fd/1e293b?text=Dynamic+Content" alt="Dynamic Content Image" class="mx-auto rounded-lg shadow-md" />
+                            </div>
+                        `;
+                    } else if (config.currentLanguage === 'ca') {
+                        contentToDisplay = `
+                            <h2 class="text-3xl font-bold mb-4 text-center text-blue-700">Benvingut al meu Lloc Web</h2>
+                            <p class="text-lg text-gray-700 text-center">Aquest lloc carrega el seu contingut directament des d'un repositori de GitHub.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">Explora les diferents seccions utilitzant el menú de navegació.</p>
+                            <p class="text-md text-gray-600 mt-4 text-center">Aquest és un exemple de com pots construir la teva pròpia web amb un stack senzill LAMP + GitHub.</p>
+                            <div class="mt-8 text-center">
+                                <img src="https://placehold.co/400x250/b0d6fd/1e293b?text=Contingut+Din%C3%A0mic" alt="Imatge de Contingut Dinàmic" class="mx-auto rounded-lg shadow-md" />
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Para cualquier otra ruta, intentamos cargar el archivo Markdown del idioma actual
+                    contentToDisplay = await fetchGitHubFile(path);
+                }
+            } catch (error) {
+                // Capturamos cualquier error de fetchGitHubFile o de lógica aquí
+                console.error("Error al renderizar el contenido:", error);
+                contentToDisplay = `
+                    <h2 class="text-red-600 font-bold mb-4">Error Inesperado al Cargar la Página</h2>
+                    <p>Ocurrió un error al intentar cargar el contenido de la página: <code>${path}</code> en idioma <code>${config.currentLanguage}</code>.</p>
+                    <p>Detalle: ${error.message}</p>
+                    <p>Por favor, verifica que el archivo exista en tu repositorio de GitHub para el idioma seleccionado y que la configuración del repositorio sea correcta.</p>
+                `;
+            } finally {
+                contentElement.innerHTML = markdownToHtml(contentToDisplay);
+                hideLoading(); // Oculta el indicador una vez que el contenido está en el DOM
+            }
+        }
+
+        // Función para construir el menú
+        async function buildMenu() {
+            try {
+                // Configurar la URL base para archivos raw de GitHub, incluyendo el idioma actual
+                config.baseUrl = `https://raw.githubusercontent.com/${config.repoOwner}/${config.repoName}/${config.branch}/${config.currentLanguage}/`;
+
+                // Intenta cargar el menu.json del idioma actual
+                const menuJson = await fetchGitHubFile('menu.json');
+                const menuItems = JSON.parse(menuJson);
+
+                navElement.innerHTML = ''; // Limpiar menú existente
+                menuItems.forEach(item => {
+                    const link = document.createElement('a');
+                    link.href = `#${item.path}`; // Usamos el hash para la navegación
+                    link.textContent = item.label;
+                    link.classList.add('px-4', 'py-2', 'bg-blue-700', 'hover:bg-blue-800', 'text-white', 'font-medium', 'rounded-md', 'shadow-sm');
+                    navElement.appendChild(link);
+                });
+
+                hideLoading(); // Asegura que el indicador de carga se oculte si el menú falla
+            } catch (error) {
+                // Si hay un error al cargar o parsear el menú, lo mostramos
+                console.error("No se pudo construir el menú:", error);
+                navElement.innerHTML = `<span class="text-red-300">Error al cargar el menú: ${error.message}</span>`;
+                // Muestra un mensaje más prominente en el área de contenido principal también
+                contentElement.innerHTML = markdownToHtml(`
+                    <h2 class="text-red-600 font-bold mb-4">Error Crítico: No se pudo cargar el menú de navegación para el idioma ${config.currentLanguage}.</h2>
+                    <p>Esto puede deberse a:</p>
+                    <ul>
+                        <li>Los datos de <code>repoOwner</code>, <code>repoName</code> o <code>branch</code> en el código HTML no son correctos.</li>
+                        <li>El archivo <code>${config.currentLanguage}/menu.json</code> no existe en el repositorio o no está en la ubicación correcta.</li>
+                        <li>El archivo <code>${config.currentLanguage}/menu.json</code> no es un JSON válido.</li>
+                        <li>El repositorio de GitHub no es público o no tienes acceso a él.</li>
+                    </ul>
+                    <p>Detalle técnico: ${error.message}</p>
+                    <div class="mt-8 text-center">
+                        <img src="https://placehold.co/400x250/ef4444/fee2e2?text=Error+Cargando+Men%C3%BA" alt="Error de carga" class="mx-auto rounded-lg shadow-md" />
+                    </div>
+                `);
+                hideLoading(); // Asegura que el indicador de carga se oculte si el menú falla
+            }
+        }
+
+        // Manejar el cambio de hash en la URL
+        window.addEventListener('hashchange', () => {
+            const path = window.location.hash.substring(1); // Elimina el '#'
+            renderContent(path);
+        });
+
+        // Manejar el cambio de idioma en el selector
+        languageSwitcher.addEventListener('change', (event) => {
+            config.currentLanguage = event.target.value;
+            // Guardar el idioma seleccionado en localStorage para persistencia
+            localStorage.setItem('appLanguage', config.currentLanguage);
+            // Recargar el menú y el contenido para el nuevo idioma
+            buildMenu();
+            const initialPath = window.location.hash.substring(1) || 'home';
+            renderContent(initialPath);
+        });
+
+        // Inicializar la aplicación al cargar la página
+        window.onload = async () => {
+            // Intentar cargar el idioma desde localStorage, si no, usar el preferido del navegador
+            config.currentLanguage = localStorage.getItem('appLanguage') || getPreferredLanguage();
+            languageSwitcher.value = config.currentLanguage; // Establecer el selector al idioma actual
+
+            await buildMenu();
+            // Cargar el contenido inicial basado en el hash o mostrar la página de inicio
+            const initialPath = window.location.hash.substring(1) || 'home';
+            renderContent(initialPath);
+        };
+    </script>
+</body>
+</html>

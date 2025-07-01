@@ -1,4 +1,4 @@
-```markdown
+```
 # Sobre Mí: Mi Historia y Pasiones
 
 Soy un desarrollador de software con más de 10 años de experiencia, especializado en aplicaciones web robustas y escalables. Me apasiona transformar ideas complejas en soluciones funcionales y fáciles de usar.

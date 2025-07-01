@@ -1,4 +1,4 @@
-```markdown
+```
 # Explorando las Novedades de PHP 8.3
 
 **Fecha:** 28 de Junio, 2025

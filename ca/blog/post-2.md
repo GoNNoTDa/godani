@@ -1,4 +1,4 @@
-```markdown
+```
 # Optimización de Rendimiento en Bases de Datos MySQL
 
 **Fecha:** 15 de Mayo, 2025

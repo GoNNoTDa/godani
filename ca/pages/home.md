@@ -1,4 +1,4 @@
-```markdown
+```
 # Mi Portfolio de Proyectos
 
 Aquí puedes encontrar una selección de algunos de los proyectos en los que he trabajado.

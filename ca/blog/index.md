@@ -1,4 +1,4 @@
-```markdown
+```
 # Mi Blog Personal
 
 ¡Bienvenido a mi blog! Aquí comparto mis pensamientos, tutoriales y experiencias sobre desarrollo web, tecnología y otros temas que me resultan interesantes.
